@@ -9,7 +9,6 @@ Screen screen(screenX, screenY, padding);
 //input
 int chosenX {};
 int chosenY {};
-int inputToIndex {};
 //decide which player
 bool firstPlayer {true};
 //arrays for checking winner
@@ -43,39 +42,11 @@ void Hang(){//this is so the program doesn't exit straight away, the user has to
 }
 
 int Horizontal() {
-    currentlyMatching = false;
-    for(int i = 0; i < screenY; i++){//loop over each row
-        for(int j = 1; j < screenX; j++){//loop over each element in the row
-            if(spaces[0 + (screenX * i)] == spaces[j + (screenX * i)] && spaces[1 + (screenX * i)] != ' '){ //if the first space and second space in a row match but are not empty
-                playerMatching = (spaces[1 + (screenX * i)] == 'X') ? 1 : 2;//if the first space in the row = X set it to 1 otherwise set it to 2 -> ternary operator
-                currentlyMatching = true;
-            } else{
-                currentlyMatching = false;
-            }
-        }
-        if(currentlyMatching){
-            return playerMatching;
-        }
-    }
-    return -1;
+
 }
 
 int Vertical() {
-    currentlyMatching = false;
-    for(int i = 0; i < screenX; i++){//loop over each column
-        for(int j = 1; j < screenY; j++){//loop over each element in the row
-            if(spaces[screenX * i] == spaces[(screenX * i) + (screenX * j)] && spaces[screenX * i] != ' '){ //if the first space and second space in a row match but are not empty
-                playerMatching = (1 + spaces[screenX * i] == 'X') ? 1 : 2;//ternary operator | index is 1 because if it were 0 it produces the wrong result
-                currentlyMatching = true;
-            } else{
-                currentlyMatching = false;
-            }
-        }
-        if(currentlyMatching){
-            return playerMatching;
-        }
-    }
-    return -1;
+
 }//these kind of work but produce unexpected results sometimes
 
 int CheckWinner(){
@@ -95,8 +66,7 @@ void GameLogic(){
             std::cout << "\nPLAYER X -> choose a number on the Y axis to place your X: ";
             std::cin >> chosenY;
 
-            inputToIndex = (chosenX - 1) + ((chosenY - 1) * screenX); // this is the calculation to find the tile from the input. We add the x value -1 to the value of (y-1) * width of the screen
-            spaces[inputToIndex] = *"X";
+            spaces[chosenY - 1][chosenX - 1] = *"X";
 
             firstPlayer = false;
         } else{
@@ -105,12 +75,12 @@ void GameLogic(){
             std::cout << "\nPLAYER O -> choose a number on the Y axis to place your O: ";
             std::cin >> chosenY;
 
-            inputToIndex = (chosenX - 1) + ((chosenY - 1) * screenX);
-            spaces[inputToIndex] = *"O";
+            spaces[chosenY - 1][chosenX - 1] = *"O";
 
             firstPlayer = true;
         }
         screen.Render();
+        /*
         switch(CheckWinner()){
             case 1:
             std::cout << "\nPlayer X wins!\n";
@@ -124,18 +94,18 @@ void GameLogic(){
             std::cout << "\n\nNobody has won yet\n";
             break;
         }
+        */
 }
 
 int main(){
     Initialise();
     Screen screen(screenX, screenY, padding);
-    screen.Render();
     
     //game logic
     for(int i = 0; i < screenX * screenY; i++){//The maximum number of turns is the screen width multiplied by the screen height
         if(gameActive){
-            GameLogic();
             screen.Render();
+            GameLogic();
         }
     }
 

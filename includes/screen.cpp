@@ -1,11 +1,11 @@
-//this file contains all the logic needed to render the grid in the terminal
+//this file contains all the logic needed to initialise and render the grid
 
 #include <iostream>
 #include <iomanip>
 #include <string>
 #include <cstring>
 
-char* spaces = NULL;
+char** spaces;
 
 class Screen
 {
@@ -14,9 +14,8 @@ class Screen
     int height {};
     int spacing {};
     bool turn {false}; //false = X, true = O
-    int count {-1}; //this is in order to draw the screen correctly (correct number of lines)
-    int linePrintCount {0}; //this is to properly print the lines with the array
-    int linePrintIterator {0}; // for the for loop that uses the value above
+    int count {0}; 
+    int linePrintIterator {0};
 
     void DrawLine(int type){
         switch(type){
@@ -35,10 +34,6 @@ class Screen
     }
 
     void DrawScreen(){//contains the logic for drawing screen
-        if(count == height){//finished (break out of recursion)
-            count = -1; //reset the count so we can call drawScreen() again
-        } 
-        else if(count == -1){//initialising the screen (so it looks pretty with a divider and a top row of numbers)
 
             DrawLine(0); //seperate the previous grid
             std::cout << "\n";
@@ -51,26 +46,21 @@ class Screen
             DrawLine(1); //dividing line under the number line
             std::cout << "\n";
 
-            linePrintCount = width;
             linePrintIterator = 0;
             count = 0;
-            DrawScreen();
-        } 
-        else{
-            std::cout << count + 1 << std::setw(spacing);//so that we can print out the number of each line
-            for(; linePrintIterator < linePrintCount; linePrintIterator++){//printing each line
-
-                std::cout << "|" << std::setw(spacing) << spaces[linePrintIterator] << std::setw(spacing) << "|"; 
-            }
+            
+            for(int i = 0; i < height; i++){
+                std::cout << i + 1 << std::setw(spacing);//so that we can print out the number of each line
+                for(int j = 0; j < width; j++){
+                    std::cout << "|" << std::setw(spacing) << spaces[i][j] << std::setw(spacing) << "|"; 
+                }
 
             std::cout << "\n";
             DrawLine(1); //dividing line
             std::cout << "\n";
 
-            linePrintCount = linePrintCount + width;
-            count++;
-            DrawScreen();
-            }   
+            count = 0;
+    }
     }
 
     public:
@@ -80,10 +70,17 @@ class Screen
         height = _height;
         spacing = _spacing;
 
-        spaces = new char[_width *_height];
-        for(int i = 0; i < _width * _height; i++){
-            strcpy(&spaces[i], " ");//make sure all elements in the array "spaces" are initialised to "X"
+        spaces = new char*[_height];
+        for(int i = 0; i < _height; i++){
+            spaces[i] = new char[_width];
+        } //2D array initialisation | "spaces" is a pointer to an array of pointers. Each pointer in this pointer array points to the memory address of another pointer.
+
+        for(int i = 0; i < _height; i++){
+            for(int j = 0; j < _width; j++){
+                spaces[i][j] = ' '; //Initialise all elements in the 2D array to " " so that the grid displays properly
+            }
         }
+
     }//constructor
 
     ~Screen(){
