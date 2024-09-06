@@ -158,10 +158,12 @@ void GameLogic(){
             std::cout << "\nPLAYER X -> choose a number on the Y axis to place your X: ";
             std::cin >> chosenY;
 
-            if(spaces[chosenY - 1][chosenX - 1] == ' '){
-                validMove = true;
-            } else{
+            if(chosenX <= screenX && chosenY <= screenY){
+                if(spaces[chosenY - 1][chosenX - 1] == ' '){
+                    validMove = true;
+                } else{
                 std::cout << "\nPLAYER X -> this space has already been taken";
+                }
             }
         }
             spaces[chosenY - 1][chosenX - 1] = 'X';
@@ -174,10 +176,12 @@ void GameLogic(){
             std::cout << "\nPLAYER O -> choose a number on the Y axis to place your O: ";
             std::cin >> chosenY;
 
-            if(spaces[chosenY - 1][chosenX - 1] == ' '){
-                validMove = true;
-            } else{
+            if(chosenX <= screenX && chosenY <= screenY){
+                if(spaces[chosenY - 1][chosenX - 1] == ' '){
+                    validMove = true;
+                } else{
                 std::cout << "\nPLAYER O -> this space has already been taken";
+                }
             }
         }
             spaces[chosenY - 1][chosenX - 1] = 'O';
