@@ -109,7 +109,6 @@ int DiagonalRL(){
     currentlyMatching = true;
     int count = screenX - 1;
     for(int i = 0; i < screenY - 1; i++){
-        std::cout << "\n checking " << count << ", " << i << " with " << count - 1 << ", " << i + 1 << "\n";
         if(spaces[i][count] != spaces[i + 1][count - 1] || spaces[i][count] == ' '){
             currentlyMatching = false;
         } else if(spaces[i][count] != ' '){
